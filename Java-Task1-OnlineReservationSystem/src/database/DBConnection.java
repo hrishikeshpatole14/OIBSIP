@@ -5,22 +5,18 @@ import java.sql.DriverManager;
 
 public class DBConnection {
 
-    public static void main(String[] args) {
+    private static final String URL =
+            "jdbc:sqlite:database/reservation.db";
+
+    public static Connection getConnection() {
 
         try {
-
-            Connection con = DriverManager.getConnection("jdbc:sqlite:database/reservation.db");
-
-            if (con != null) {
-                System.out.println("Database Connected Successfully!");
-            }
-
-            con.close();
-
+            return DriverManager.getConnection(URL);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        return null;
     }
 
 }
