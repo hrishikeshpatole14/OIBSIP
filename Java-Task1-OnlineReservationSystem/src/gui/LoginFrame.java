@@ -45,21 +45,20 @@ public class LoginFrame extends JFrame {
             String username = usernameField.getText().trim();
             String password = new String(passwordField.getPassword());
 
-            if (LoginService.validateLogin(username, password)) {
+            if(LoginService.validateLogin(username, password)) {
 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Login Successful!",
-                        "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Login Successful!");
+
+                new DashboardFrame();
+
+                dispose();
 
             } else {
 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Invalid Username or Password!",
-                        "Login Failed",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Invalid Username or Password!");
+
             }
 
         });

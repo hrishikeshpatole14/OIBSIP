@@ -3,7 +3,6 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 import service.ReservationService;
-import javax.swing.JOptionPane;
 
 public class ReservationFrame extends JFrame {
 
@@ -18,72 +17,117 @@ public class ReservationFrame extends JFrame {
     JTextField destinationField;
 
     JButton reserveButton;
+    JButton backButton;
 
     public ReservationFrame() {
 
         setTitle("Online Reservation System - Reservation");
-        setSize(500, 450);
+        setSize(600, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel panel = new JPanel(new GridLayout(8, 2, 10, 10));
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        panel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Passenger Name
-        panel.add(new JLabel("Passenger Name"));
-        passengerField = new JTextField();
-        panel.add(passengerField);
+        //Passenger Name 
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(new JLabel("Passenger Name"), gbc);
+
+        gbc.gridx = 1;
+        passengerField = new JTextField(20);
+        panel.add(passengerField, gbc);
 
         // Train Number
-        panel.add(new JLabel("Train Number"));
-        trainNumberField = new JTextField();
-        panel.add(trainNumberField);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(new JLabel("Train Number"), gbc);
 
-        // Train Name
-        panel.add(new JLabel("Train Name"));
-        trainNameField = new JTextField();
-        panel.add(trainNameField);
+        gbc.gridx = 1;
+        trainNumberField = new JTextField(20);
+        panel.add(trainNumberField, gbc);
 
-        // Class Type
-        panel.add(new JLabel("Class Type"));
-        classField = new JTextField();
-        panel.add(classField);
+        //Train Name 
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add(new JLabel("Train Name"), gbc);
 
-        // Journey Date
-        panel.add(new JLabel("Journey Date"));
-        dateField = new JTextField();
-        panel.add(dateField);
+        gbc.gridx = 1;
+        trainNameField = new JTextField(20);
+        panel.add(trainNameField, gbc);
 
-        // Source Station
-        panel.add(new JLabel("Source Station"));
-        sourceField = new JTextField();
-        panel.add(sourceField);
+        // ========= Class Type =========
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        panel.add(new JLabel("Class Type"), gbc);
 
-        // Destination Station
-        panel.add(new JLabel("Destination Station"));
-        destinationField = new JTextField();
-        panel.add(destinationField);
+        gbc.gridx = 1;
+        classField = new JTextField(20);
+        panel.add(classField, gbc);
 
-        // Button
-        panel.add(new JLabel(""));
+        // ========= Journey Date =========
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        panel.add(new JLabel("Journey Date"), gbc);
+
+        gbc.gridx = 1;
+        dateField = new JTextField(20);
+        panel.add(dateField, gbc);
+
+        // ========= Source Station =========
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        panel.add(new JLabel("Source Station"), gbc);
+
+        gbc.gridx = 1;
+        sourceField = new JTextField(20);
+        panel.add(sourceField, gbc);
+
+        // ========= Destination Station =========
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        panel.add(new JLabel("Destination Station"), gbc);
+
+        gbc.gridx = 1;
+        destinationField = new JTextField(20);
+        panel.add(destinationField, gbc);
+
+        // ========= Buttons =========
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
 
         reserveButton = new JButton("Reserve");
+        reserveButton.setPreferredSize(new Dimension(120, 35));
 
-        panel.add(reserveButton);
+        backButton = new JButton("Back");
+        backButton.setPreferredSize(new Dimension(120, 35));
+
+        buttonPanel.add(reserveButton);
+        buttonPanel.add(backButton);
+
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.gridwidth = 2;
+
+        panel.add(buttonPanel, gbc);
 
         add(panel);
 
+        // ===========================
         // Reserve Button Action
+        // ===========================
         reserveButton.addActionListener(e -> {
 
-            String passengerName = passengerField.getText();
-            String trainNumber = trainNumberField.getText();
-            String trainName = trainNameField.getText();
-            String classType = classField.getText();
-            String journeyDate = dateField.getText();
-            String source = sourceField.getText();
-            String destination = destinationField.getText();
+            String passengerName = passengerField.getText().trim();
+            String trainNumber = trainNumberField.getText().trim();
+            String trainName = trainNameField.getText().trim();
+            String classType = classField.getText().trim();
+            String journeyDate = dateField.getText().trim();
+            String source = sourceField.getText().trim();
+            String destination = destinationField.getText().trim();
 
             if (passengerName.isEmpty() ||
                 trainNumber.isEmpty() ||
@@ -93,8 +137,11 @@ public class ReservationFrame extends JFrame {
                 source.isEmpty() ||
                 destination.isEmpty()) {
 
-                JOptionPane.showMessageDialog(this,
-                        "Please fill all fields!");
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Please fill all fields!",
+                        "Validation",
+                        JOptionPane.WARNING_MESSAGE);
 
                 return;
             }
@@ -110,7 +157,8 @@ public class ReservationFrame extends JFrame {
 
             if (success) {
 
-                JOptionPane.showMessageDialog(this,
+                JOptionPane.showMessageDialog(
+                        this,
                         "Reservation Added Successfully!");
 
                 passengerField.setText("");
@@ -123,10 +171,22 @@ public class ReservationFrame extends JFrame {
 
             } else {
 
-                JOptionPane.showMessageDialog(this,
+                JOptionPane.showMessageDialog(
+                        this,
                         "Failed to Add Reservation!");
 
             }
+
+        });
+
+        // ===========================
+        // Back Button Action
+        // ===========================
+        backButton.addActionListener(e -> {
+
+            new DashboardFrame();
+
+            dispose();
 
         });
 
@@ -138,5 +198,4 @@ public class ReservationFrame extends JFrame {
         SwingUtilities.invokeLater(() -> new ReservationFrame());
 
     }
-
 }

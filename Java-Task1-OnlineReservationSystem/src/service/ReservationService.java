@@ -1,5 +1,6 @@
 package service;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -18,11 +19,14 @@ public class ReservationService {
 
         String sql = "INSERT INTO reservations(passenger_name, train_number, train_name, class_type, journey_date, from_station, to_station) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try {
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql);
+        ) {
 
-            Connection con = DBConnection.getConnection();
-
-            PreparedStatement ps = con.prepareStatement(sql);
+            // ADD THESE TWO LINES
+            File db = new File("database/reservation.db");
+            System.out.println("Database Path: " + db.getAbsolutePath());
 
             ps.setString(1, passengerName);
             ps.setString(2, trainNumber);
@@ -32,9 +36,9 @@ public class ReservationService {
             ps.setString(6, source);
             ps.setString(7, destination);
 
+            System.out.println("Trying to insert reservation...");
             int rows = ps.executeUpdate();
-
-            con.close();
+            System.out.println("Inserted Successfully");
 
             return rows > 0;
 
