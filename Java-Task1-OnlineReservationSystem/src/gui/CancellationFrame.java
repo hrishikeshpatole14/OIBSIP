@@ -49,30 +49,47 @@ public class CancellationFrame extends JFrame {
                 int reservationId =
                         Integer.parseInt(reservationIdField.getText().trim());
 
-                boolean success =
-                        CancellationService.cancelReservation(reservationId);
+                int option = JOptionPane.showConfirmDialog(
+                        this,
+                        "Are you sure you want to cancel this reservation?",
+                        "Confirm Cancellation",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
 
-                if (success) {
+                if(option == JOptionPane.YES_OPTION){
 
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "Reservation Cancelled Successfully!");
+                    boolean success =
+                            CancellationService.cancelReservation(reservationId);
 
-                    reservationIdField.setText("");
+                    if(success){
 
-                } else {
+                        JOptionPane.showMessageDialog(
+                                this,
+                                "✅ Reservation Cancelled Successfully!",
+                                "Success",
+                                JOptionPane.INFORMATION_MESSAGE);
 
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "Reservation ID Not Found!");
+                        reservationIdField.setText("");
+
+                    }else{
+
+                        JOptionPane.showMessageDialog(
+                                this,
+                                "❌ Reservation ID Not Found!",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+
+                    }
 
                 }
 
-            } catch (NumberFormatException ex) {
+            } catch(NumberFormatException ex){
 
                 JOptionPane.showMessageDialog(
                         this,
-                        "Please enter a valid Reservation ID.");
+                        "Please enter a valid Reservation ID.",
+                        "Invalid Input",
+                        JOptionPane.WARNING_MESSAGE);
 
             }
 

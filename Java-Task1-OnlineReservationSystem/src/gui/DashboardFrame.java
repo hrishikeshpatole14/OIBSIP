@@ -9,62 +9,137 @@ public class DashboardFrame extends JFrame {
 
     JButton reserveButton;
     JButton cancelButton;
-    JButton logoutButton;
     JButton viewButton;
+    JButton searchButton;
+    JButton updateButton;
+    JButton logoutButton;
 
     public DashboardFrame() {
 
-        setTitle("Online Reservation System - Dashboard");
-        setSize(400, 300);
+        setTitle("Online Reservation System");
+        setSize(550,500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel panel = new JPanel(new GridLayout(3, 1, 15, 15));
-        panel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
+        JPanel mainPanel = new JPanel(new BorderLayout());
 
-        reserveButton = new JButton("Reserve Ticket");
-        cancelButton = new JButton("Cancel Ticket");
-        logoutButton = new JButton("Logout");
-        viewButton = new JButton("View Reservations");
+        // Header
+        JLabel title = new JLabel(
+                "ONLINE RESERVATION SYSTEM",
+                SwingConstants.CENTER);
 
-        panel.add(reserveButton);
-        panel.add(cancelButton);
-        panel.add(viewButton);
-        panel.add(logoutButton);
+        title.setFont(new Font("Arial", Font.BOLD,24));
+        title.setOpaque(true);
+        title.setBackground(new Color(30,144,255));
+        title.setForeground(Color.WHITE);
+        title.setPreferredSize(new Dimension(100,60));
 
-        add(panel);
+        mainPanel.add(title,BorderLayout.NORTH);
 
-        // Open Reservation Screen
-        reserveButton.addActionListener(e -> {
+        JPanel centerPanel =
+                new JPanel(new GridLayout(7,1,15,15));
+
+        centerPanel.setBorder(
+                BorderFactory.createEmptyBorder(
+                        25,60,25,60));
+
+        JLabel welcome =
+                new JLabel("Welcome, Admin");
+
+        welcome.setHorizontalAlignment(
+                SwingConstants.CENTER);
+
+        welcome.setFont(
+                new Font("Arial",Font.BOLD,18));
+
+        centerPanel.add(welcome);
+
+        reserveButton=new JButton("Reserve Ticket");
+        cancelButton=new JButton("Cancel Reservation");
+        viewButton=new JButton("View Reservations");
+        searchButton=new JButton("Search Reservation");
+        updateButton=new JButton("Update Reservation");
+        logoutButton=new JButton("Logout");
+
+        JButton buttons[]={
+                reserveButton,
+                cancelButton,
+                viewButton,
+                searchButton,
+                updateButton,
+                logoutButton
+        };
+
+        for(JButton button:buttons){
+
+            button.setFont(
+                    new Font("Arial",
+                            Font.BOLD,
+                            15));
+
+            button.setFocusPainted(false);
+
+            centerPanel.add(button);
+
+        }
+
+        mainPanel.add(centerPanel,
+                BorderLayout.CENTER);
+
+        add(mainPanel);
+
+        reserveButton.addActionListener(e->{
             new ReservationFrame();
             dispose();
         });
 
-        // Open Cancellation Screen
-        cancelButton.addActionListener(e -> {
+        cancelButton.addActionListener(e->{
             new CancellationFrame();
             dispose();
         });
-        
-        // open view reservation
-        viewButton.addActionListener(e -> {
 
+        viewButton.addActionListener(e->{
             new ViewReservationFrame();
-
             dispose();
-
         });
 
-        // Logout
-        logoutButton.addActionListener(e -> {
-            new LoginFrame();
+        searchButton.addActionListener(e->{
+            new SearchReservationFrame();
             dispose();
+        });
+
+        updateButton.addActionListener(e->{
+            new UpdateReservationFrame();
+            dispose();
+        });
+
+        logoutButton.addActionListener(e->{
+
+            int option =
+                    JOptionPane.showConfirmDialog(
+                            this,
+                            "Are you sure you want to Logout?",
+                            "Logout",
+                            JOptionPane.YES_NO_OPTION);
+
+            if(option==JOptionPane.YES_OPTION){
+
+                new LoginFrame();
+
+                dispose();
+
+            }
+
         });
 
         setVisible(true);
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new DashboardFrame());
+
+        SwingUtilities.invokeLater(
+                DashboardFrame::new);
+
     }
+
 }

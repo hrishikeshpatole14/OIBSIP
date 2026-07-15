@@ -15,6 +15,7 @@ public class ReservationFrame extends JFrame {
     JTextField dateField;
     JTextField sourceField;
     JTextField destinationField;
+    JButton clearButton;
 
     JButton reserveButton;
     JButton backButton;
@@ -104,9 +105,12 @@ public class ReservationFrame extends JFrame {
 
         backButton = new JButton("Back");
         backButton.setPreferredSize(new Dimension(120, 35));
+        clearButton = new JButton("Clear");
+        clearButton.setPreferredSize(new Dimension(120,35));
 
         buttonPanel.add(reserveButton);
         buttonPanel.add(backButton);
+        buttonPanel.add(clearButton);
 
         gbc.gridx = 0;
         gbc.gridy = 7;
@@ -141,6 +145,29 @@ public class ReservationFrame extends JFrame {
                         this,
                         "Please fill all fields!",
                         "Validation",
+                        JOptionPane.WARNING_MESSAGE);
+
+                return;
+            }
+            
+         // NEW VALIDATION
+            if (!trainNumber.matches("\\d+")) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Train Number should contain only digits.",
+                        "Invalid Input",
+                        JOptionPane.WARNING_MESSAGE);
+
+                return;
+            }
+            
+            if (!journeyDate.matches("\\d{2}-\\d{2}-\\d{4}")) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Journey Date must be in DD-MM-YYYY format.",
+                        "Invalid Date",
                         JOptionPane.WARNING_MESSAGE);
 
                 return;
@@ -187,6 +214,19 @@ public class ReservationFrame extends JFrame {
             new DashboardFrame();
 
             dispose();
+
+        });
+        
+        // clear button
+        clearButton.addActionListener(e -> {
+
+            passengerField.setText("");
+            trainNumberField.setText("");
+            trainNameField.setText("");
+            classField.setText("");
+            dateField.setText("");
+            sourceField.setText("");
+            destinationField.setText("");
 
         });
 
