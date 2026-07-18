@@ -109,8 +109,8 @@ public class ReservationFrame extends JFrame {
         clearButton.setPreferredSize(new Dimension(120,35));
 
         buttonPanel.add(reserveButton);
-        buttonPanel.add(backButton);
         buttonPanel.add(clearButton);
+        buttonPanel.add(backButton);
 
         gbc.gridx = 0;
         gbc.gridy = 7;
@@ -172,8 +172,20 @@ public class ReservationFrame extends JFrame {
 
                 return;
             }
+            
+            
+            if (source.equalsIgnoreCase(destination)) {
 
-            boolean success = ReservationService.addReservation(
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Source and Destination cannot be the same.",
+                        "Invalid Route",
+                        JOptionPane.WARNING_MESSAGE);
+
+                return;
+            }
+
+            String pnrNumber = ReservationService.addReservation(
                     passengerName,
                     trainNumber,
                     trainName,
@@ -182,11 +194,15 @@ public class ReservationFrame extends JFrame {
                     source,
                     destination);
 
-            if (success) {
+            if (pnrNumber != null) {
 
                 JOptionPane.showMessageDialog(
                         this,
-                        "Reservation Added Successfully!");
+                        "Reservation Booked Successfully!\n\n"
+                        + "Your PNR Number is:\n"
+                        + pnrNumber,
+                        "Booking Successful",
+                        JOptionPane.INFORMATION_MESSAGE);
 
                 passengerField.setText("");
                 trainNumberField.setText("");
@@ -200,10 +216,11 @@ public class ReservationFrame extends JFrame {
 
                 JOptionPane.showMessageDialog(
                         this,
-                        "Failed to Add Reservation!");
+                        "Failed to Book Reservation!",
+                        "Database Error",
+                        JOptionPane.ERROR_MESSAGE);
 
             }
-
         });
 
         // ===========================

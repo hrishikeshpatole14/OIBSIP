@@ -11,7 +11,7 @@ public class UpdateReservationFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
-    JTextField reservationIdField;
+    JTextField pnrField;
     JTextField passengerField;
     JTextField trainNumberField;
     JTextField trainNameField;
@@ -31,18 +31,19 @@ public class UpdateReservationFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel panel = new JPanel(new BorderLayout(10,10));
-        panel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         JLabel title = new JLabel("UPDATE RESERVATION", SwingConstants.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 22));
+        title.setForeground(new Color(0, 102, 204));
         panel.add(title, BorderLayout.NORTH);
 
-        JPanel formPanel = new JPanel(new GridLayout(8,2,10,10));
+        JPanel formPanel = new JPanel(new GridLayout(8, 2, 10, 10));
 
-        formPanel.add(new JLabel("Reservation ID"));
-        reservationIdField = new JTextField();
-        formPanel.add(reservationIdField);
+        formPanel.add(new JLabel("PNR Number"));
+        pnrField = new JTextField();
+        formPanel.add(pnrField);
 
         formPanel.add(new JLabel("Passenger Name"));
         passengerField = new JTextField();
@@ -77,8 +78,13 @@ public class UpdateReservationFrame extends JFrame {
         JPanel buttonPanel = new JPanel();
 
         searchButton = new JButton("Search");
+        searchButton.setPreferredSize(new Dimension(120, 35));
+
         updateButton = new JButton("Update");
+        updateButton.setPreferredSize(new Dimension(120, 35));
+
         backButton = new JButton("Back");
+        backButton.setPreferredSize(new Dimension(120, 35));
 
         buttonPanel.add(searchButton);
         buttonPanel.add(updateButton);
@@ -88,7 +94,6 @@ public class UpdateReservationFrame extends JFrame {
 
         add(panel);
 
-        // Initially disable editing
         passengerField.setEditable(false);
         trainNumberField.setEditable(false);
         trainNameField.setEditable(false);
@@ -98,88 +103,111 @@ public class UpdateReservationFrame extends JFrame {
         destinationField.setEditable(false);
         updateButton.setEnabled(false);
 
-        // Search Button
+        // SEARCH
         searchButton.addActionListener(e -> {
 
-            try {
+            if (pnrField.getText().trim().isEmpty()) {
 
-                int reservationId =
-                        Integer.parseInt(reservationIdField.getText().trim());
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Please enter PNR Number.",
+                        "Validation",
+                        JOptionPane.WARNING_MESSAGE);
 
-                Reservation reservation =
-                        SearchReservationService.searchReservation(reservationId);
+                return;
+            }
 
-                if(reservation != null){
+            Reservation reservation =
+                    SearchReservationService.searchReservation(
+                            pnrField.getText().trim());
 
-                    passengerField.setText(reservation.getPassengerName());
-                    trainNumberField.setText(reservation.getTrainNumber());
-                    trainNameField.setText(reservation.getTrainName());
-                    classField.setText(reservation.getClassType());
-                    dateField.setText(reservation.getJourneyDate());
-                    sourceField.setText(reservation.getFromStation());
-                    destinationField.setText(reservation.getToStation());
+            if (reservation != null) {
 
-                    passengerField.setEditable(true);
-                    trainNumberField.setEditable(true);
-                    trainNameField.setEditable(true);
-                    classField.setEditable(true);
-                    dateField.setEditable(true);
-                    sourceField.setEditable(true);
-                    destinationField.setEditable(true);
+                passengerField.setText(reservation.getPassengerName());
+                trainNumberField.setText(reservation.getTrainNumber());
+                trainNameField.setText(reservation.getTrainName());
+                classField.setText(reservation.getClassType());
+                dateField.setText(reservation.getJourneyDate());
+                sourceField.setText(reservation.getFromStation());
+                destinationField.setText(reservation.getToStation());
 
-                    updateButton.setEnabled(true);
+                passengerField.setEditable(true);
+                trainNumberField.setEditable(true);
+                trainNameField.setEditable(true);
+                classField.setEditable(true);
+                dateField.setEditable(true);
+                sourceField.setEditable(true);
+                destinationField.setEditable(true);
 
-                }else{
+                updateButton.setEnabled(true);
 
-                    JOptionPane.showMessageDialog(this,
-                            "Reservation Not Found!");
+            } else {
 
-                }
-
-            }catch(NumberFormatException ex){
-
-                JOptionPane.showMessageDialog(this,
-                        "Please enter a valid Reservation ID.");
+                JOptionPane.showMessageDialog(
+                        this,
+                        "No Reservation Found with this PNR.",
+                        "Search Result",
+                        JOptionPane.INFORMATION_MESSAGE);
 
             }
 
         });
 
-        // Update Button
+        // UPDATE
         updateButton.addActionListener(e -> {
 
-            int reservationId =
-                    Integer.parseInt(reservationIdField.getText());
+            if (passengerField.getText().trim().isEmpty() ||
+                    trainNumberField.getText().trim().isEmpty() ||
+                    trainNameField.getText().trim().isEmpty() ||
+                    classField.getText().trim().isEmpty() ||
+                    dateField.getText().trim().isEmpty() ||
+                    sourceField.getText().trim().isEmpty() ||
+                    destinationField.getText().trim().isEmpty()) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Please fill all fields.",
+                        "Validation",
+                        JOptionPane.WARNING_MESSAGE);
+
+                return;
+            }
 
             boolean success =
                     UpdateReservationService.updateReservation(
 
-                            reservationId,
-                            passengerField.getText(),
-                            trainNumberField.getText(),
-                            trainNameField.getText(),
-                            classField.getText(),
-                            dateField.getText(),
-                            sourceField.getText(),
-                            destinationField.getText()
+                            pnrField.getText().trim(),
+                            passengerField.getText().trim(),
+                            trainNumberField.getText().trim(),
+                            trainNameField.getText().trim(),
+                            classField.getText().trim(),
+                            dateField.getText().trim(),
+                            sourceField.getText().trim(),
+                            destinationField.getText().trim()
 
                     );
 
-            if(success){
+            if (success) {
 
-                JOptionPane.showMessageDialog(this,
-                        "Reservation Updated Successfully!");
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Reservation Updated Successfully!",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
 
-            }else{
+            } else {
 
-                JOptionPane.showMessageDialog(this,
-                        "Update Failed!");
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Failed to Update Reservation!",
+                        "Database Error",
+                        JOptionPane.ERROR_MESSAGE);
 
             }
 
         });
 
-        // Back Button
+        // BACK
         backButton.addActionListener(e -> {
 
             new DashboardFrame();
@@ -196,5 +224,4 @@ public class UpdateReservationFrame extends JFrame {
                 new UpdateReservationFrame());
 
     }
-
 }

@@ -8,7 +8,7 @@ import database.DBConnection;
 public class UpdateReservationService {
 
     public static boolean updateReservation(
-            int reservationId,
+            String pnrNumber,
             String passengerName,
             String trainNumber,
             String trainName,
@@ -25,7 +25,7 @@ public class UpdateReservationService {
                 + "journey_date = ?, "
                 + "from_station = ?, "
                 + "to_station = ? "
-                + "WHERE reservation_id = ?";
+                + "WHERE pnr_number = ?";
 
         try (
                 Connection con = DBConnection.getConnection();
@@ -39,7 +39,7 @@ public class UpdateReservationService {
             ps.setString(5, journeyDate);
             ps.setString(6, source);
             ps.setString(7, destination);
-            ps.setInt(8, reservationId);
+            ps.setString(8, pnrNumber);
 
             int rows = ps.executeUpdate();
 

@@ -18,12 +18,13 @@ public class ViewReservationFrame extends JFrame {
     public ViewReservationFrame() {
 
         setTitle("Online Reservation System - View Reservations");
-        setSize(950, 450);
+        setSize(1100, 450);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         String columns[] = {
                 "ID",
+                "PNR Number",
                 "Passenger",
                 "Train No",
                 "Train Name",
@@ -35,7 +36,8 @@ public class ViewReservationFrame extends JFrame {
 
         DefaultTableModel model = new DefaultTableModel(columns, 0);
 
-        JTable table = new JTable(model);
+        table = new JTable(model);
+        table.setRowHeight(25);
 
         ArrayList<Reservation> reservationList =
                 ViewReservationService.getAllReservations();
@@ -45,6 +47,7 @@ public class ViewReservationFrame extends JFrame {
             model.addRow(new Object[] {
 
                     r.getReservationId(),
+                    r.getPnrNumber(),
                     r.getPassengerName(),
                     r.getTrainNumber(),
                     r.getTrainName(),

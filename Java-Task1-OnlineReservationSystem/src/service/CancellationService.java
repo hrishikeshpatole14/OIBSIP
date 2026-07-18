@@ -7,16 +7,16 @@ import database.DBConnection;
 
 public class CancellationService {
 
-    public static boolean cancelReservation(int reservationId) {
+    public static boolean cancelReservation(String pnrNumber) {
 
-        String sql = "DELETE FROM reservations WHERE reservation_id = ?";
+        String sql = "DELETE FROM reservations WHERE pnr_number = ?";
 
         try (
                 Connection con = DBConnection.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql)
         ) {
 
-            ps.setInt(1, reservationId);
+            ps.setString(1, pnrNumber);
 
             int rows = ps.executeUpdate();
 

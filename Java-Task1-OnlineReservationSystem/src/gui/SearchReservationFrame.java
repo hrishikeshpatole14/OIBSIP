@@ -10,7 +10,7 @@ public class SearchReservationFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
-    JTextField reservationIdField;
+    JTextField pnrField;
     JTextField passengerField;
     JTextField trainNumberField;
     JTextField trainNameField;
@@ -29,52 +29,58 @@ public class SearchReservationFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Main Panel
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        // Title
         JLabel title = new JLabel("SEARCH RESERVATION", SwingConstants.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 20));
+        title.setForeground(new Color(0, 102, 204));
         panel.add(title, BorderLayout.NORTH);
 
-        // Form Panel
         JPanel formPanel = new JPanel(new GridLayout(8, 2, 10, 10));
 
-        formPanel.add(new JLabel("Reservation ID"));
-        reservationIdField = new JTextField();
-        formPanel.add(reservationIdField);
+        // PNR Number
+        formPanel.add(new JLabel("PNR Number"));
+        pnrField = new JTextField();
+        formPanel.add(pnrField);
 
+        // Passenger Name
         formPanel.add(new JLabel("Passenger Name"));
         passengerField = new JTextField();
         passengerField.setEditable(false);
         formPanel.add(passengerField);
 
+        // Train Number
         formPanel.add(new JLabel("Train Number"));
         trainNumberField = new JTextField();
         trainNumberField.setEditable(false);
         formPanel.add(trainNumberField);
 
+        // Train Name
         formPanel.add(new JLabel("Train Name"));
         trainNameField = new JTextField();
         trainNameField.setEditable(false);
         formPanel.add(trainNameField);
 
+        // Class
         formPanel.add(new JLabel("Class"));
         classField = new JTextField();
         classField.setEditable(false);
         formPanel.add(classField);
 
+        // Journey Date
         formPanel.add(new JLabel("Journey Date"));
         dateField = new JTextField();
         dateField.setEditable(false);
         formPanel.add(dateField);
 
+        // Source
         formPanel.add(new JLabel("From Station"));
         sourceField = new JTextField();
         sourceField.setEditable(false);
         formPanel.add(sourceField);
 
+        // Destination
         formPanel.add(new JLabel("To Station"));
         destinationField = new JTextField();
         destinationField.setEditable(false);
@@ -82,11 +88,13 @@ public class SearchReservationFrame extends JFrame {
 
         panel.add(formPanel, BorderLayout.CENTER);
 
-        // Buttons
         JPanel buttonPanel = new JPanel();
 
         searchButton = new JButton("Search");
+        searchButton.setPreferredSize(new Dimension(120, 35));
+
         backButton = new JButton("Back");
+        backButton.setPreferredSize(new Dimension(120, 35));
 
         buttonPanel.add(searchButton);
         buttonPanel.add(backButton);
@@ -95,54 +103,58 @@ public class SearchReservationFrame extends JFrame {
 
         add(panel);
 
-        // Search Button
+        // ================= SEARCH =================
+
         searchButton.addActionListener(e -> {
 
-            try {
+            String pnrNumber = pnrField.getText().trim();
 
-                int reservationId =
-                        Integer.parseInt(reservationIdField.getText().trim());
-
-                Reservation reservation =
-                        SearchReservationService.searchReservation(reservationId);
-
-                if (reservation != null) {
-
-                    passengerField.setText(reservation.getPassengerName());
-                    trainNumberField.setText(reservation.getTrainNumber());
-                    trainNameField.setText(reservation.getTrainName());
-                    classField.setText(reservation.getClassType());
-                    dateField.setText(reservation.getJourneyDate());
-                    sourceField.setText(reservation.getFromStation());
-                    destinationField.setText(reservation.getToStation());
-
-                } else {
-
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "Reservation Not Found!");
-
-                    passengerField.setText("");
-                    trainNumberField.setText("");
-                    trainNameField.setText("");
-                    classField.setText("");
-                    dateField.setText("");
-                    sourceField.setText("");
-                    destinationField.setText("");
-
-                }
-
-            } catch (NumberFormatException ex) {
+            if (pnrNumber.isEmpty()) {
 
                 JOptionPane.showMessageDialog(
                         this,
-                        "Please enter a valid Reservation ID.");
+                        "Please enter PNR Number.",
+                        "Validation",
+                        JOptionPane.WARNING_MESSAGE);
+
+                return;
+            }
+
+            Reservation reservation =
+                    SearchReservationService.searchReservation(pnrNumber);
+
+            if (reservation != null) {
+
+                passengerField.setText(reservation.getPassengerName());
+                trainNumberField.setText(reservation.getTrainNumber());
+                trainNameField.setText(reservation.getTrainName());
+                classField.setText(reservation.getClassType());
+                dateField.setText(reservation.getJourneyDate());
+                sourceField.setText(reservation.getFromStation());
+                destinationField.setText(reservation.getToStation());
+
+            } else {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "No Reservation Found with this PNR Number.",
+                        "Search Result",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                passengerField.setText("");
+                trainNumberField.setText("");
+                trainNameField.setText("");
+                classField.setText("");
+                dateField.setText("");
+                sourceField.setText("");
+                destinationField.setText("");
 
             }
 
         });
 
-        // Back Button
+        // ================= BACK =================
+
         backButton.addActionListener(e -> {
 
             new DashboardFrame();

@@ -2,6 +2,7 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+
 import service.LoginService;
 
 public class LoginFrame extends JFrame {
@@ -22,7 +23,7 @@ public class LoginFrame extends JFrame {
         JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-       //username
+        // Username
         panel.add(new JLabel("Username"));
         usernameField = new JTextField();
         panel.add(usernameField);
@@ -39,36 +40,59 @@ public class LoginFrame extends JFrame {
 
         add(panel);
 
-        // Login Button Action
+        // Login Action
         loginButton.addActionListener(e -> {
 
             String username = usernameField.getText().trim();
             String password = new String(passwordField.getPassword());
 
-            if(LoginService.validateLogin(username, password)) {
+            // Validation
+            if (username.isEmpty() || password.isEmpty()) {
 
-                JOptionPane.showMessageDialog(this,
-                        "Login Successful!");
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Please enter Username and Password.",
+                        "Validation",
+                        JOptionPane.WARNING_MESSAGE);
+
+                return;
+            }
+
+            if (LoginService.validateLogin(username, password)) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Login Successful!",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
 
                 new DashboardFrame();
-
                 dispose();
 
             } else {
 
-                JOptionPane.showMessageDialog(this,
-                        "Invalid Username or Password!");
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Invalid Username or Password!",
+                        "Login Failed",
+                        JOptionPane.ERROR_MESSAGE);
+
+                passwordField.setText("");
+                passwordField.requestFocus();
 
             }
 
         });
+
+        // Press Enter to Login
+        getRootPane().setDefaultButton(loginButton);
 
         setVisible(true);
     }
 
     public static void main(String[] args) {
 
-        SwingUtilities.invokeLater(() -> new LoginFrame());
+        SwingUtilities.invokeLater(LoginFrame::new);
 
     }
 }

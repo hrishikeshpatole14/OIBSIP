@@ -27,6 +27,7 @@ public class ViewReservationService {
                 Reservation reservation = new Reservation(
 
                         rs.getInt("reservation_id"),
+                        rs.getString("pnr_number"),
                         rs.getString("passenger_name"),
                         rs.getString("train_number"),
                         rs.getString("train_name"),
